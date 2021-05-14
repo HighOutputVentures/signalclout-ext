@@ -59,13 +59,8 @@ function showSignalCloutBtn() {
   newDialog.style.width = '100%'
   newDialog.style.border = '1px solid transparent'
   newDialog.style.position = 'sticky'
-  newDialog.style.height = '75%'
+  newDialog.style.height = '90%'
   newDialog.appendChild(closeModalBtn)
-
-  // var iframe: HTMLIFrameElement = newIframe as HTMLIFrameElement
-  // var tmpEl = iframe?.contentWindow?.document.querySelector('/html/body/div[1]/div/div[2]/div/div/div[2]/div[1]/div/div/div[2]/div[5]/div[1]')
-  // console.log("iframe", iframe)
-  // console.log("TMPEL", tmpEl)
 
   // newDialog.innerHTML = `${unameTxt} Iframe to be inserted here`;
   newDialog.append(newIframe)
