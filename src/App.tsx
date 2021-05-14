@@ -6,7 +6,7 @@ import { EOL } from "os";
 
 function App() {
   const [url, setUrl] = useState<string>("");
-  const [isEnable, isEnableSet] = useState<boolean>(true);
+  const [isEnable, isEnableSet] = useState<boolean>(false);
 
   /**
    * Send message to the content script
@@ -55,8 +55,7 @@ function App() {
       });
 
     checkIsEnableMessage()
-    sendShowMessage()
-  });
+  }, []);
 
   const sendShowMessage = () => {
     const message: ChromeMessage = {

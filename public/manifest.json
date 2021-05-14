@@ -12,18 +12,23 @@
     "48": "logo192.png",
     "128": "logo192.png"
   },
-  "permissions": [
-    "activeTab"
-  ],
+  "permissions": ["scripting",
+    "activeTab"],
+
   "optional_permissions": [
     "<all_urls>"
   ],
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["./static/js/content.js"],
+      "matches": [
+        "http://bitclout.com/*",
+        "https://bitclout.com/*"
+      ],
+      "js": [
+        "./static/js/content.js"
+      ],
       "all_frames": false,
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ]
 }
