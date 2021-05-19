@@ -1,4 +1,7 @@
 import { ChromeMessage, Sender } from "../types";
+import ReactDOM from 'react-dom';
+import App from '../App';
+import React from 'react';
 
 function showSignalCloutBtn() {
   var unameEl = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.d-flex.flex-column.pl-15px.pr-15px > div.fs-24px.font-weight-bold.d-flex.align-items-center')
@@ -34,6 +37,10 @@ function showSignalCloutBtn() {
   newIframe.style.width = '100%'
   newIframe.style.height = '100%'
 
+  newIframe.onload = function() {
+    console.log("The iframe is loaded");
+  };
+
   var closeModalBtn = document.createElement('button')
   closeModalBtn.style.position = 'absolute'
   closeModalBtn.style.height = '30px'
@@ -63,7 +70,17 @@ function showSignalCloutBtn() {
   newDialog.appendChild(closeModalBtn)
 
   // newDialog.innerHTML = `${unameTxt} Iframe to be inserted here`;
-  newDialog.append(newIframe)
+  const app = document.createElement("div");
+  app.id = "root-signal-clout";
+  // document.body.append(app);
+
+  newDialog.append(app)
+
+  ReactDOM.render(
+    React.createElement(App),
+    document.getElementById('root-signal-clout')
+  );
+
   div?.parentNode?.insertBefore(newDialog, div.nextSibling);
 
   newBtn.addEventListener("click", function () {

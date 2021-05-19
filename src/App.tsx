@@ -3,6 +3,37 @@ import logo from "./logo.svg";
 import "./App.css";
 import { ChromeMessage, Sender } from "./types";
 import { EOL } from "os";
+import { ChakraProvider } from "@chakra-ui/react";
+import BitcloutProfileModal from './BitcloutProfileModal'
+import { ApolloProvider } from "@apollo/client/react";
+import theme from "./config/theme";
+import { client } from "./graphql/apollo/client";
+import { useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
+
+const TEST = gql`
+  query signalcloutProfile($publicKey: String!) {
+    profile_next(publicKey: $publicKey) {
+      id
+    }
+  }
+`;
+
+const TestApp = () => {
+  const { data, loading } = useQuery(TEST, {
+    fetchPolicy: "network-only",
+    variables: {
+      publicKey: 'BC1YLi4WxfmuDg7Dxzk1EFrtph11g95R9BZEaUe4BU49vPcn5Znavzp',
+    },
+  });
+
+  return (
+    <BitcloutProfileModal queryId={data?.profile_next?.id}
+          isOpen
+          onClose={() => console.log('handleClose')}
+          setQueryId={ (id) => console.log(id) } />
+  )
+}
 
 function App() {
   const [url, setUrl] = useState<string>("");
@@ -54,7 +85,7 @@ function App() {
         setUrl(url || "");
       });
 
-    checkIsEnableMessage()
+    checkIsEnableMessage();
   }, []);
 
   const sendShowMessage = () => {
@@ -106,21 +137,26 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>URL:</p>
-        <p>{url}</p>
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={isEnable}
-            onChange={(e) => handleChange(e)}
-          />
-          <span className="slider round"></span>
-        </label>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <ChakraProvider theme={theme} resetCSS>
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>URL:</p>
+          <p>{url}</p>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={isEnable}
+              onChange={(e) => handleChange(e)}
+            />
+            <span className="slider round"></span>
+          </label>
+        </header>
+        <TestApp />
+      </div>
+    </ChakraProvider>
+    </ApolloProvider>
   );
 }
 
