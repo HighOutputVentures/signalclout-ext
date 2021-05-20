@@ -3,10 +3,18 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { ApolloProvider } from "@apollo/client/react";
+import { client } from "./graphql/apollo/client";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "./config/theme";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <ChakraProvider theme={theme} resetCSS>
+        <App />
+      </ChakraProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

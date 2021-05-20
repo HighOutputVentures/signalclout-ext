@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { ChromeMessage, Sender } from "./types";
-import { ChakraProvider, useMediaQuery, Box, Heading } from "@chakra-ui/react";
+import { useMediaQuery, Box, Heading } from "@chakra-ui/react";
 import BitcloutProfileModal from "./BitcloutProfileModal";
-import { ApolloProvider } from "@apollo/client/react";
-import theme from "./config/theme";
-import { client } from "./graphql/apollo/client";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 
@@ -162,7 +159,7 @@ function App() {
       <BitcloutProfileModal
         queryId={data?.profile?.id}
         isOpen={modalIsOpen}
-        onClose={() => handleCloseAction()}
+        onClose={handleCloseAction}
         setQueryId={(id) => console.log(id)}
       />
     );
@@ -174,9 +171,7 @@ function App() {
   ]);
 
   return (
-    <ApolloProvider client={client}>
-      <ChakraProvider theme={theme} resetCSS>
-        <div className="App">
+    <div className="App">
           {isPopupWindow && (
             <Box w="100%" p={1}>
               <header className="App-header">
@@ -197,8 +192,7 @@ function App() {
           )}
           {isBrowserWindow && <TestApp />}
         </div>
-      </ChakraProvider>
-    </ApolloProvider>
+    
   );
 }
 
