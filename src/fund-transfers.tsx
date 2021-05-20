@@ -127,8 +127,8 @@ const FundTransfers: React.FC<FundTransfersProps> = ({
     threshold: 0,
   });
 
-  const { node_next = {} } = data;
-  const { walletPriceBitCloutNanos = 0, transfers = {} } = node_next || {};
+  const { node = {} } = data;
+  const { walletPriceBitCloutNanos = 0, transfers = {} } = node || {};
   const { totalDepositsUSD = 0, totalWithdrawalsUSD = 0 } = transfers;
   const walletBalance = walletPriceBitCloutNanos * 1e-9 * usdPrice;
 
@@ -141,8 +141,8 @@ const FundTransfers: React.FC<FundTransfersProps> = ({
     },
   });
 
-  const transfersResults = transferData?.node_next?.transfers.edges || [];
-  const { pageInfo } = transferData?.node_next?.transfers || {};
+  const transfersResults = transferData?.node?.transfers.edges || [];
+  const { pageInfo } = transferData?.node?.transfers || {};
 
   const processedTransfersResults = processTransfersResults(
     transfersResults,

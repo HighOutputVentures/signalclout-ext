@@ -60,15 +60,15 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
   });
 
   const coinPrice =
-    data?.node_next?.creatorCoinPriceBitCloutNanos * 1e-9 * usdPrice;
+    data?.node?.creatorCoinPriceBitCloutNanos * 1e-9 * usdPrice;
   const marketCap =
-    data?.node_next?.creatorCoinInCirculationNanos *
-    data?.node_next?.creatorCoinPriceBitCloutNanos *
+    data?.node?.creatorCoinInCirculationNanos *
+    data?.node?.creatorCoinPriceBitCloutNanos *
     1e-18 *
     usdPrice;
-  const founderReward = data?.node_next?.creatorBasisPoints / 10000;
-  const coins = data?.node_next?.creatorCoinInCirculationNanos * 1e-9;
-  const accountAge = moment().diff(data?.node_next?.dateTimeCreated, "days");
+  const founderReward = data?.node?.creatorBasisPoints / 10000;
+  const coins = data?.node?.creatorCoinInCirculationNanos * 1e-9;
+  const accountAge = moment().diff(data?.node?.dateTimeCreated, "days");
 
   return (
     <Modal
@@ -102,7 +102,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                 borderBottomLeftRadius="8px"
               >
                 <Avatar
-                  src={data?.node_next?.image || ""}
+                  src={data?.node?.image || ""}
                   width="100px"
                   height="100px"
                   mx="auto"
@@ -124,7 +124,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   >
                     <Box mx="auto" my="auto" color="blue.500">
                       <CopyPubKeyNext
-                        publicKey={data?.node_next?.publicKey || ""}
+                        publicKey={data?.node?.publicKey || ""}
                         trigger={triggerCopyState}
                       />
                     </Box>
@@ -139,14 +139,14 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                     cursor="pointer"
                     onClick={() => {
                       window.open(
-                        getProfileUrl(data?.node_next?.username),
+                        getProfileUrl(data?.node?.username),
                         "_blank"
                       );
                       (window as any).gtag(
                         "event",
                         "view_profile_in_bitclout",
                         {
-                          value: data?.node_next?.username,
+                          value: data?.node?.username,
                         }
                       );
                     }}
@@ -157,7 +157,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   </Flex>
                 </Flex>
                 <Link
-                  href={getProfileUrl(data?.node_next?.username)}
+                  href={getProfileUrl(data?.node?.username)}
                   target="_blank"
                   fontSize="20px"
                   color="gray.800"
@@ -166,8 +166,8 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   mb="15px"
                 >
                   {`${
-                    data?.node_next?.username
-                      ? `@${data.node_next.username}`
+                    data?.node?.username
+                      ? `@${data.node.username}`
                       : "anonymous"
                   }`}
                 </Link>
@@ -177,7 +177,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   color="gray.500"
                   mb="24px"
                 >
-                  {data?.node_next?.description}
+                  {data?.node?.description}
                 </Box>
                 <Grid templateColumns="repeat(2, 1fr)" gap="14px" mb="20px">
                   <BitcloutProfileCard
@@ -198,13 +198,13 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   />
                   <BitcloutProfileCard
                     label="Followers"
-                    value={numeral(data?.node_next?.followersCount).format(
+                    value={numeral(data?.node?.followersCount).format(
                       "0,"
                     )}
                   />
                   <BitcloutProfileCard
                     label="Following"
-                    value={numeral(data?.node_next?.followingCount).format(
+                    value={numeral(data?.node?.followingCount).format(
                       "0,"
                     )}
                   />
@@ -214,11 +214,11 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   />
                   <BitcloutProfileCard
                     label="Posts"
-                    value={numeral(data?.node_next?.postsCount).format("0,")}
+                    value={numeral(data?.node?.postsCount).format("0,")}
                   />
                   <BitcloutProfileCard
                     label="Likes"
-                    value={numeral(data?.node_next?.likesCount).format("0,")}
+                    value={numeral(data?.node?.likesCount).format("0,")}
                   />
                 </Grid>
               </Flex>

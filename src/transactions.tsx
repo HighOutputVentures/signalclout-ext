@@ -123,7 +123,7 @@ const processTransactionsResults = (
 
 const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
   const usdPrice = useUSDPrice();
-  const publicKey = data?.node_next?.publicKey;
+  const publicKey = data?.node?.publicKey;
 
   const { ref: lastItemRef, inView } = useInView({
     threshold: 0,
@@ -146,8 +146,8 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
     }
   );
 
-  const transactionResults = transactionsData?.transactions_next?.edges || [];
-  const { pageInfo } = transactionsData?.transactions_next || {};
+  const transactionResults = transactionsData?.transactions?.edges || [];
+  const { pageInfo } = transactionsData?.transactions || {};
 
   const processedTransactionsResults = processTransactionsResults(
     transactionResults,

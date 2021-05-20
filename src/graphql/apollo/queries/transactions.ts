@@ -6,7 +6,7 @@ export const TRANSACTIONS = gql`
     $after: Binary
     $filter: ProfileTransactionFilterInput!
   ) {
-    transactions_next(first: $first, after: $after, filter: $filter) {
+    transactions(first: $first, after: $after, filter: $filter) {
       edges {
         node {
           id

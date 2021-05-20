@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const SIGNALCLOUT_PROFILE = gql`
   query signalcloutProfile($publicKey: String!) {
-    profile_next(publicKey: $publicKey) {
+    profile(publicKey: $publicKey) {
       id
       publicKey
       username
@@ -28,9 +28,9 @@ export const SIGNALCLOUT_PROFILE = gql`
 
 export const PROFILE = gql`
   query($id: Binary!) {
-    node_next(id: $id) {
+    node(id: $id) {
       id
-      ... on Profile_next {
+      ... on Profile {
         id
         username
         publicKey
@@ -56,15 +56,15 @@ export const PROFILE = gql`
   }
 `;
 
-export const PROFILES_NEXT = gql`
+export const PROFILES = gql`
   query profilesNext(
     $first: Int
     $after: Binary
-    $filter: ProfileFilterInput_next
+    $filter: ProfileFilterInput
     $sort: ProfileSortInput
     $search: [String!]
   ) {
-    profiles_next(
+    profiles(
       filter: $filter
       first: $first
       after: $after

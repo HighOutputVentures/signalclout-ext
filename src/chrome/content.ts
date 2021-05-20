@@ -1,13 +1,58 @@
 import { ChromeMessage, Sender } from "../types";
-import ReactDOM from 'react-dom';
-import App from '../App';
-import React from 'react';
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+chrome.runtime.onMessage.addListener(request => {
+  if (request.type === 'viewScProfile') {
+
+    var modalDialog = document.createElement('dialog');
+    modalDialog.id = 'signal-clout-view'
+    modalDialog.style.width = '100%'
+    modalDialog.style.border = '1px solid transparent'
+    modalDialog.style.position = 'sticky'
+    modalDialog.style.height = '100%'
+    modalDialog.style.background = 'transparent'
+
+    // modalDialog.setAttribute("style", "height:40%");
+    modalDialog.innerHTML = `<iframe id="headlineFetcher"style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
+
+    document.body.appendChild(modalDialog);
+
+    const dialogInstance = document.querySelector("dialog");
+    dialogInstance?.showModal();
+
+    const iframe = document.getElementById("headlineFetcher");
+
+    iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
+    iframe?.setAttribute('frameBorder', "0")
+
+    dialogInstance?.querySelector("button")?.addEventListener("click", () => {
+      dialogInstance.close();
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  var elExist = false
+  var isRendered = false
+  setInterval(function () {
+    var checkEl = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.d-flex.flex-column.pl-15px.pr-15px > div.fs-24px.font-weight-bold.d-flex.align-items-center')
+    if (checkEl) {
+      elExist = true
+    } else {
+      elExist = false
+      isRendered = false
+    }
+
+    if (isRendered === false && elExist === true) {
+      showSignalCloutBtn()
+      isRendered = true
+    }
+  }, 100); // check every 100ms
+});
 
 function showSignalCloutBtn() {
-  var unameEl = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.d-flex.flex-column.pl-15px.pr-15px > div.fs-24px.font-weight-bold.d-flex.align-items-center')
-  var unameTxt = unameEl?.textContent
-
-  var div = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.creator-profile__avatar');
+  var div = document.getElementsByClassName('creator-profile__avatar')[0];
   var newBtn = document.createElement('button');
   newBtn.id = 'trigger-btn'
   newBtn.style.width = '30px'
@@ -30,83 +75,34 @@ function showSignalCloutBtn() {
   newBtn.appendChild(newBtnImg)
   div?.parentNode?.insertBefore(newBtn, div.nextSibling);
 
-  var newIframe = document.createElement('IFRAME')
-  newIframe.id = 'iframe-sc'
-  newIframe.setAttribute('src', `https://www.signalclout.com/profile-analyzer?search=${unameTxt?.replace('@', "").trim()}&history=true`)
-  newIframe.style.border = '1px solid transparent'
-  newIframe.style.width = '100%'
-  newIframe.style.height = '100%'
+  var modalDialog = document.createElement('dialog');
+  modalDialog.id = 'signal-clout-view'
+  modalDialog.style.width = '100%'
+  modalDialog.style.border = '1px solid transparent'
+  modalDialog.style.position = 'sticky'
+  modalDialog.style.height = '100%'
+  modalDialog.style.background = 'transparent'
 
-  newIframe.onload = function() {
-    console.log("The iframe is loaded");
-  };
+  // modalDialog.setAttribute("style", "height:40%");
+  modalDialog.innerHTML = `<iframe id="headlineFetcher"style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
 
-  var closeModalBtn = document.createElement('button')
-  closeModalBtn.style.position = 'absolute'
-  closeModalBtn.style.height = '30px'
-  closeModalBtn.style.width = '50px'
-  closeModalBtn.style.top = '10px'
-  closeModalBtn.style.right = '20px'
-  closeModalBtn.style.background = 'transparent'
-  closeModalBtn.style.border = 'none'
-  closeModalBtn.style.color = '#131313'
-  closeModalBtn.style.textAlign = 'center'
-  closeModalBtn.style.textDecoration = 'none'
-  closeModalBtn.style.display = 'inline-block'
-  closeModalBtn.innerHTML = 'Close'
-  closeModalBtn.style.fontSize = '16px'
+  document.body.appendChild(modalDialog);
 
-  closeModalBtn.addEventListener("click", function () {
-    // newBtn.innerHTML = "Hello World - Clicked";
-    newDialog.close()
+  const dialogInstance = document.querySelector("dialog");
+
+  const iframe = document.getElementById("headlineFetcher");
+
+  iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
+  iframe?.setAttribute('frameBorder', "0")
+
+  dialogInstance?.querySelector("button")?.addEventListener("click", () => {
+    dialogInstance.close();
   });
-
-  var newDialog = document.createElement('dialog');
-  newDialog.id = 'signal-clout-view'
-  newDialog.style.width = '100%'
-  newDialog.style.border = '1px solid transparent'
-  newDialog.style.position = 'sticky'
-  newDialog.style.height = '90%'
-  newDialog.appendChild(closeModalBtn)
-
-  // newDialog.innerHTML = `${unameTxt} Iframe to be inserted here`;
-  const app = document.createElement("div");
-  app.id = "root-signal-clout";
-  // document.body.append(app);
-
-  newDialog.append(app)
-
-  ReactDOM.render(
-    React.createElement(App),
-    document.getElementById('root-signal-clout')
-  );
-
-  div?.parentNode?.insertBefore(newDialog, div.nextSibling);
 
   newBtn.addEventListener("click", function () {
-    // newBtn.innerHTML = "Hello World - Clicked";
-    newDialog.showModal()
+    dialogInstance?.showModal();
   });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  var elExist = false
-  var isRendered = false
-  setInterval(function () {
-    var checkEl = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.d-flex.flex-column.pl-15px.pr-15px > div.fs-24px.font-weight-bold.d-flex.align-items-center')
-    if (checkEl) {
-      elExist = true
-    } else {
-      elExist = false
-      isRendered = false
-    }
-
-    if(isRendered === false && elExist === true) {
-      showSignalCloutBtn()
-      isRendered = true
-    }
-  }, 100); // check every 100ms
-});
 
 const messagesFromReactAppListener = (
   message: ChromeMessage,
@@ -121,14 +117,28 @@ const messagesFromReactAppListener = (
   if (
     sender.id === chrome.runtime.id &&
     message.from === Sender.React &&
+    message.message === "hide dialog"
+  ) {
+
+    document.querySelector("dialog")?.close()
+
+    response(true);
+  }
+
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === Sender.React &&
     message.message === "check button"
   ) {
     var elInstance = document.getElementById('trigger-btn');
 
-    if (elInstance) {
-      response(true)
+    var creatorKey = document.getElementsByClassName('creator-profile__ellipsis-restriction')[0].textContent?.trim()
+    console.log("🚀 ~ file: content.ts ~ line 108 ~ creatorKey", creatorKey)
+
+    if (elInstance && creatorKey) {
+      response({isVisible: true, queryId: creatorKey})
     } else {
-      response(false)
+      response({isVisible: false, queryId: ''})
     }
   }
 

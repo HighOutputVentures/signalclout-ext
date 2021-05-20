@@ -4,7 +4,7 @@ import "./App.css";
 import { ChromeMessage, Sender } from "./types";
 import { EOL } from "os";
 import { ChakraProvider } from "@chakra-ui/react";
-import BitcloutProfileModal from './BitcloutProfileModal'
+import BitcloutProfileModal from "./BitcloutProfileModal";
 import { ApolloProvider } from "@apollo/client/react";
 import theme from "./config/theme";
 import { client } from "./graphql/apollo/client";
@@ -13,30 +13,14 @@ import { gql } from "@apollo/client";
 
 const TEST = gql`
   query signalcloutProfile($publicKey: String!) {
-    profile_next(publicKey: $publicKey) {
+    profile(publicKey: $publicKey) {
       id
     }
   }
 `;
 
-const TestApp = () => {
-  const { data, loading } = useQuery(TEST, {
-    fetchPolicy: "network-only",
-    variables: {
-      publicKey: 'BC1YLi4WxfmuDg7Dxzk1EFrtph11g95R9BZEaUe4BU49vPcn5Znavzp',
-    },
-  });
-
-  return (
-    <BitcloutProfileModal queryId={data?.profile_next?.id}
-          isOpen
-          onClose={() => console.log('handleClose')}
-          setQueryId={ (id) => console.log(id) } />
-  )
-}
-
 function App() {
-  const [url, setUrl] = useState<string>("");
+  const [qId, qIdSet] = useState<string>("");
   const [isEnable, isEnableSet] = useState<boolean>(false);
 
   /**
@@ -68,7 +52,8 @@ function App() {
          * in the specified tab for the current extension.
          */
         chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          isEnableSet(response);
+          isEnableSet(response.isVisible);
+          qIdSet(response.queryId)
         });
       });
   };
@@ -82,7 +67,7 @@ function App() {
     chrome.tabs &&
       chrome.tabs.query(queryInfo, (tabs) => {
         const url = tabs[0].url;
-        setUrl(url || "");
+        // setUrl(url || "");
       });
 
     checkIsEnableMessage();
@@ -128,6 +113,26 @@ function App() {
       });
   };
 
+  const sendHideDialogMessage = () => {
+    const message: ChromeMessage = {
+      from: Sender.React,
+      message: "hide dialog",
+    };
+
+    const queryInfo: chrome.tabs.QueryInfo = {
+      active: true,
+      currentWindow: true,
+    };
+
+    chrome.tabs &&
+      chrome.tabs.query(queryInfo, (tabs) => {
+        const currentTabId = tabs[0].id;
+        chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
+          // isEnableSet(response);
+        });
+      });
+  };
+
   function handleChange(el: any) {
     if (el.target.checked) {
       sendShowMessage();
@@ -136,26 +141,54 @@ function App() {
     }
   }
 
+  const TestApp = () => {
+    const [modalIsOpen, modalIsOpenSet] = useState(true);
+    const { data, loading } = useQuery(TEST, {
+      fetchPolicy: "network-only",
+      variables: {
+        publicKey: qId,
+      },
+    });
+
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
+    const handleCloseAction = () => {
+      modalIsOpenSet(false);
+      sendHideDialogMessage()
+    };
+
+    return (
+      <BitcloutProfileModal
+        queryId={data?.profile?.id}
+        isOpen={modalIsOpen}
+        onClose={() => handleCloseAction()}
+        setQueryId={(id) => console.log(id)}
+      />
+    );
+  };
+
   return (
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme} resetCSS>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>URL:</p>
-          <p>{url}</p>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isEnable}
-              onChange={(e) => handleChange(e)}
-            />
-            <span className="slider round"></span>
-          </label>
-        </header>
-        <TestApp />
-      </div>
-    </ChakraProvider>
+        <div className="App">
+          {/* <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>URL:</p>
+            <p>{url}</p>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isEnable}
+                onChange={(e) => handleChange(e)}
+              />
+              <span className="slider round"></span>
+            </label>
+          </header> */}
+          <TestApp />
+        </div>
+      </ChakraProvider>
     </ApolloProvider>
   );
 }

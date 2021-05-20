@@ -66,7 +66,7 @@ const processCoinTransfersResults = (
 };
 
 const CoinTransfers: React.FC<CoinTransfersProps> = ({ data, setQueryID }) => {
-  const publicKey = data?.node_next?.publicKey;
+  const publicKey = data?.node?.publicKey;
 
   const { ref: lastItemRef, inView } = useInView({
     threshold: 0,
@@ -88,11 +88,11 @@ const CoinTransfers: React.FC<CoinTransfersProps> = ({ data, setQueryID }) => {
   );
 
   const coinTransfersResults =
-    coinTransfersData?.profile_next?.coinTransferTransactions?.edges?.map(
+    coinTransfersData?.profile?.coinTransferTransactions?.edges?.map(
       ({ node }: any) => node
     ) || [];
   const { pageInfo } =
-    coinTransfersData?.profile_next?.coinTransferTransactions || {};
+    coinTransfersData?.profile?.coinTransferTransactions || {};
 
   const processedCoinTransfersResults = processCoinTransfersResults(
     coinTransfersResults,

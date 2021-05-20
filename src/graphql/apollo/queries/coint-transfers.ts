@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const COIN_TRANSFERS = gql`
   query($publicKey: String!, $first: Int, $after: Binary) {
-    profile_next(publicKey: $publicKey) {
+    profile(publicKey: $publicKey) {
       id
       coinTransferTransactions(first: $first, after: $after) {
         totalCount

@@ -12,8 +12,12 @@
     "48": "logo192.png",
     "128": "logo192.png"
   },
-  "permissions": ["activeTab"],
-  "background": { "scripts": ["hot-reload.js"] },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "permissions": ["activeTab", "contextMenus", "tabs"],
+  "web_accessible_resources" : ["*.html"],
   "optional_permissions": [
     "<all_urls>"
   ],
@@ -23,11 +27,8 @@
         "http://bitclout.com/*",
         "https://bitclout.com/*"
       ],
-      "css": ["./static/css/main.css"],
       "js": [
-        "jquery-3.6.0.min.js",
-        "./static/js/content.js",
-        "./static/js/main.js"
+        "./static/js/content.js"
       ],
       "all_frames": false,
       "run_at": "document_start"

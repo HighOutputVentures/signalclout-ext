@@ -12,14 +12,14 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        profiles_next: relayStylePagination(),
-        transactions_next: relayStylePagination(),
+        profiles: relayStylePagination(),
+        transactions: relayStylePagination(),
       },
     },
-    Profile_next: {
+    Profile: {
       fields: {
         transfers: relayStylePagination(),
-        hodlers_next: relayStylePagination(),
+        hodlers: relayStylePagination(),
         creatorsIHodle: relayStylePagination(),
         holdings: relayStylePagination(),
         coinTransferTransactions: relayStylePagination(),

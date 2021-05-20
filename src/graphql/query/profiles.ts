@@ -34,9 +34,9 @@ export const TRANSFERS = gql`
     $after: Binary
     $filter: ProfileTransferFilterInput
   ) {
-    node_next(id: $id) {
+    node(id: $id) {
       id
-      ... on Profile_next {
+      ... on Profile {
         transfers(first: $first, after: $after, filter: $filter) {
           edges {
             node {
@@ -109,7 +109,7 @@ export const HODLERS = gql`
   ) {
     profile(publicKey: $publicKey) {
       username
-      hodlers_next(first: $first, after: $after, filter: $filter) {
+      hodlers(first: $first, after: $after, filter: $filter) {
         totalBoughtUSD
         totalSoldUSD
         totalValueUSD
@@ -154,7 +154,7 @@ export const PORTFOLIO = gql`
   ) {
     profile(publicKey: $publicKey) {
       username
-      creatorsIHodle_next(first: $first, after: $after, filter: $filter) {
+      creatorsIHodle(first: $first, after: $after, filter: $filter) {
         totalBoughtUSD
         totalSoldUSD
         totalValueUSD
@@ -248,7 +248,7 @@ export const PROFILE_METRICS = gql`
       verifiedCount
       verifiedCountChange
     }
-    profiles_next {
+    profiles {
       totalCount
     }
   }

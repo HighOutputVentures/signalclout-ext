@@ -7,9 +7,9 @@ export const TRANSFERS = gql`
     $after: Binary
     $filter: ProfileTransferFilterInput
   ) {
-    node_next(id: $id) {
+    node(id: $id) {
       id
-      ... on Profile_next {
+      ... on Profile {
         transfers(first: $first, after: $after, filter: $filter) {
           totalCount
           totalDepositsUSD

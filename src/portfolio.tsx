@@ -76,7 +76,7 @@ const processWalletResults = (
 };
 
 const Wallet: React.FC<WalletProps> = ({ data, setQueryID }) => {
-  const publicKey = data?.node_next?.publicKey;
+  const publicKey = data?.node?.publicKey;
 
   const { ref: lastItemRef, inView } = useInView({
     threshold: 0,
@@ -92,10 +92,10 @@ const Wallet: React.FC<WalletProps> = ({ data, setQueryID }) => {
   });
 
   const walletResults =
-    walletData?.profile_next?.holdings?.edges?.map(({ node }: any) => node) ||
+    walletData?.profile?.holdings?.edges?.map(({ node }: any) => node) ||
     [];
 
-  const { pageInfo } = walletData?.profile_next?.holdings || {};
+  const { pageInfo } = walletData?.profile?.holdings || {};
 
   const { tableData } = processWalletResults(
     walletResults,

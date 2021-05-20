@@ -68,11 +68,11 @@ const processHodlersResults = (
 
 const Hodlers: React.FC<HodlersProps> = ({ data, setQueryID }) => {
   const usdPrice = useUSDPrice();
-  const publicKey = data?.node_next?.publicKey;
-  const creatorCoins = data?.node_next?.creatorCoinInCirculationNanos * 1e-9;
+  const publicKey = data?.node?.publicKey;
+  const creatorCoins = data?.node?.creatorCoinInCirculationNanos * 1e-9;
   const marketCap =
-    data?.node_next?.creatorCoinInCirculationNanos *
-    data?.node_next?.creatorCoinPriceBitCloutNanos *
+    data?.node?.creatorCoinInCirculationNanos *
+    data?.node?.creatorCoinPriceBitCloutNanos *
     1e-18 *
     usdPrice;
 
@@ -93,10 +93,10 @@ const Hodlers: React.FC<HodlersProps> = ({ data, setQueryID }) => {
   });
 
   const hodlersResults =
-    hodlersData?.profile_next?.hodlers_next?.edges?.map(
+    hodlersData?.profile?.hodlers?.edges?.map(
       ({ node }: any) => node
     ) || [];
-  const { pageInfo } = hodlersData?.profile_next?.hodlers_next || {};
+  const { pageInfo } = hodlersData?.profile?.hodlers || {};
 
   const processedHodlersResults = processHodlersResults(
     hodlersResults,
