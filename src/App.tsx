@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { ChromeMessage, Sender } from "./types";
-import { EOL } from "os";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useMediaQuery, Box, Heading } from "@chakra-ui/react";
 import BitcloutProfileModal from "./BitcloutProfileModal";
 import { ApolloProvider } from "@apollo/client/react";
 import theme from "./config/theme";
@@ -53,7 +52,7 @@ function App() {
          */
         chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
           isEnableSet(response.isVisible);
-          qIdSet(response.queryId)
+          qIdSet(response.queryId);
         });
       });
   };
@@ -156,7 +155,7 @@ function App() {
 
     const handleCloseAction = () => {
       // modalIsOpenSet(false);
-      sendHideDialogMessage()
+      sendHideDialogMessage();
     };
 
     return (
@@ -169,24 +168,34 @@ function App() {
     );
   };
 
+  const [isPopupWindow, isBrowserWindow] = useMediaQuery([
+    "(max-width: 800px)",
+    "(min-width: 801px)",
+  ]);
+
   return (
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme} resetCSS>
         <div className="App">
-          {/* <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>URL:</p>
-            <p>{url}</p>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isEnable}
-                onChange={(e) => handleChange(e)}
-              />
-              <span className="slider round"></span>
-            </label>
-          </header> */}
-          <TestApp />
+          {isPopupWindow && (
+            <Box w="100%" p={1}>
+              <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo" />
+                <Heading>
+                  Extension is &nbsp;
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={isEnable}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </Heading>
+              </header>
+            </Box>
+          )}
+          {isBrowserWindow && <TestApp />}
         </div>
       </ChakraProvider>
     </ApolloProvider>
