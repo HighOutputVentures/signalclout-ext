@@ -4,31 +4,8 @@ import ReactDOM from 'react-dom'
 
 chrome.runtime.onMessage.addListener(request => {
   if (request.type === 'viewScProfile') {
-
-    var modalDialog = document.createElement('dialog');
-    modalDialog.id = 'signal-clout-view'
-    modalDialog.style.width = '100%'
-    modalDialog.style.border = '1px solid transparent'
-    modalDialog.style.position = 'sticky'
-    modalDialog.style.height = '100%'
-    modalDialog.style.background = 'transparent'
-
-    // modalDialog.setAttribute("style", "height:40%");
-    modalDialog.innerHTML = `<iframe id="headlineFetcher"style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
-
-    document.body.appendChild(modalDialog);
-
     const dialogInstance = document.querySelector("dialog");
     dialogInstance?.showModal();
-
-    const iframe = document.getElementById("headlineFetcher");
-
-    iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
-    iframe?.setAttribute('frameBorder', "0")
-
-    dialogInstance?.querySelector("button")?.addEventListener("click", () => {
-      dialogInstance.close();
-    });
   }
 });
 
@@ -77,13 +54,14 @@ function showSignalCloutBtn() {
 
   var modalDialog = document.createElement('dialog');
   modalDialog.id = 'signal-clout-view'
-  modalDialog.style.width = '100%'
-  modalDialog.style.border = '1px solid transparent'
-  modalDialog.style.position = 'sticky'
+  modalDialog.style.margin = '0px'
+  modalDialog.style.display = 'flex'
+  modalDialog.style.minWidth = '100%'
+  modalDialog.style.minHeight = '100%'
   modalDialog.style.height = '100%'
-  modalDialog.style.background = 'transparent'
+  modalDialog.style.padding = '0px'
+  modalDialog.style.border = '0px solid'
 
-  // modalDialog.setAttribute("style", "height:40%");
   modalDialog.innerHTML = `<iframe id="headlineFetcher"style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
 
   document.body.appendChild(modalDialog);
@@ -94,10 +72,6 @@ function showSignalCloutBtn() {
 
   iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
   iframe?.setAttribute('frameBorder', "0")
-
-  dialogInstance?.querySelector("button")?.addEventListener("click", () => {
-    dialogInstance.close();
-  });
 
   newBtn.addEventListener("click", function () {
     dialogInstance?.showModal();
@@ -133,7 +107,6 @@ const messagesFromReactAppListener = (
     var elInstance = document.getElementById('trigger-btn');
 
     var creatorKey = document.getElementsByClassName('creator-profile__ellipsis-restriction')[0].textContent?.trim()
-    console.log("🚀 ~ file: content.ts ~ line 108 ~ creatorKey", creatorKey)
 
     if (elInstance && creatorKey) {
       response({isVisible: true, queryId: creatorKey})

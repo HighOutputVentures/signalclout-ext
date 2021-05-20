@@ -155,7 +155,7 @@ function App() {
     }
 
     const handleCloseAction = () => {
-      modalIsOpenSet(false);
+      // modalIsOpenSet(false);
       sendHideDialogMessage()
     };
 
