@@ -1,5 +1,13 @@
 import React, { useEffect } from "react";
-import { Box, Text, Tooltip, Link, Spinner, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Tooltip,
+  Link,
+  Spinner,
+  Icon,
+  Flex,
+} from "@chakra-ui/react";
 import { FaInfinity } from "react-icons/fa";
 import numeral from "numeral";
 import { useQuery } from "@apollo/client";
@@ -9,6 +17,7 @@ import { columns } from "./constants/profile-analyzer";
 import { TRANSACTIONS } from "./graphql/apollo/queries/transactions";
 import FixedTable from "./fixed-header-table";
 import useUSDPrice from "./hooks/useUSDPrice";
+import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
 
 type TransactionsProps = {
   data?: any;
@@ -96,7 +105,7 @@ const processTransactionsResults = (
       ),
       coins: (
         <Text color="gray.500" fontSize="14px">
-          {numeral(coins).format("0.00")}
+          {numeral(coins).format("0,.00")}
         </Text>
       ),
       price: (
@@ -147,7 +156,8 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
   );
 
   const transactionResults = transactionsData?.transactions?.edges || [];
-  const { pageInfo } = transactionsData?.transactions || {};
+  const { pageInfo, totalBoughtUSD, totalSoldUSD } =
+    transactionsData?.transactions || {};
 
   const processedTransactionsResults = processTransactionsResults(
     transactionResults,
@@ -169,6 +179,20 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
 
   return (
     <Box mt="24px">
+      <Flex>
+        <BitcloutProfileLabelValueComp
+          label="TOTAL BUY VOLUME"
+          value={numeral(totalBoughtUSD).format("$0,.00")}
+        />
+        <BitcloutProfileLabelValueComp
+          label="TOTAL SELL VOLUME"
+          value={numeral(totalSoldUSD).format("$0,.00")}
+        />
+        <BitcloutProfileLabelValueComp
+          label="TOTAL VOLUME"
+          value={numeral(totalBoughtUSD + totalSoldUSD).format("$0,0")}
+        />
+      </Flex>
       <Box mt="40px" position="relative" d="flex" justifyContent="center">
         {loading && <Spinner zIndex="2" pos="absolute" top="60px" />}
         <FixedTable

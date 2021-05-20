@@ -1,44 +1,33 @@
-/* eslint-disable camelcase */
 import React, { useEffect } from "react";
-import { Box, Flex, Spinner, Link, Avatar, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Link, Text, Avatar } from "@chakra-ui/react";
 import numeral from "numeral";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
-import { WALLET } from "./graphql/apollo/queries/wallet";
+import { HODLERS } from "./graphql/apollo/queries/hodlers";
 import { columns } from "./constants/profile-analyzer";
 import FixedTable from "./fixed-header-table";
 import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
+import useUSDPrice from "./hooks/useUSDPrice";
 
-type WalletProps = {
+type HodlersProps = {
   data?: any;
   queryID?: any;
   setQueryID?: any;
 };
 
-const processWalletResults = (
+const processHodlersResults = (
   results: Partial<Record<string, any>[]>,
   setNewQueryID: any,
   lastItemRef?: any
-): {
-  tableData: any;
-} => {
-  const tableData = results?.map((res: any, index) => {
-    const {
-      profile = {},
-      balanceNanos,
-      cashOutValueUSD,
-      supplyValue,
-      portfolioValue,
-    } = res || {};
-    const { id, username, image, creatorCoinPriceUSD } = profile;
-
-    const coinsHeld = balanceNanos / 1e9;
-    const marketValue = coinsHeld * creatorCoinPriceUSD;
-    const supply = supplyValue * 100;
-    const portfolio = portfolioValue * 100;
+) => {
+  return results?.map((res, index) => {
+    const { balanceNanos = 0, profile = {}, supplyValue = 0, valueUSD = 0 } =
+      res || {};
+    const { username = "", id = "", image = "" } = profile;
+    const coins = balanceNanos / 1e9;
 
     return {
-      creatorCoin: (
+      name: (
         <Flex
           align="center"
           ref={index === results.length - 1 ? lastItemRef : null}
@@ -62,43 +51,53 @@ const processWalletResults = (
           </Link>
         </Flex>
       ),
-      coinPrice: <Text>{numeral(creatorCoinPriceUSD).format("$0,.00")}</Text>,
-      coinsHeld: <Text>{numeral(coinsHeld).format("0.0000")}</Text>,
-      marketValue: <Text>{numeral(marketValue).format("$0,.00")}</Text>,
-      cashoutValue: <Text>{numeral(cashOutValueUSD).format("$0,.00")}</Text>,
-      supplyHeld: <Text>{numeral(supply).format("0.00")}%</Text>,
-      portfolio: <Text>{numeral(portfolio).format("0.00")}%</Text>,
+      coins: (
+        <Box>
+          <Text as="span">{numeral(coins).format("0.0000")}</Text>
+        </Box>
+      ),
+      supplyValue: (
+        <Box>
+          <Text as="span">{numeral(supplyValue * 100).format("0.00")}%</Text>
+        </Box>
+      ),
+      usdValue: <Box>{numeral(valueUSD).format("$0,.00")}</Box>,
     };
   });
-
-  return {
-    tableData,
-  };
 };
 
-const Wallet: React.FC<WalletProps> = ({ data, setQueryID }) => {
+const Hodlers: React.FC<HodlersProps> = ({ data, setQueryID }) => {
+  const usdPrice = useUSDPrice();
   const publicKey = data?.node?.publicKey;
+  const creatorCoins = data?.node?.creatorCoinInCirculationNanos * 1e-9;
+  const marketCap =
+    data?.node?.creatorCoinInCirculationNanos *
+    data?.node?.creatorCoinPriceBitCloutNanos *
+    1e-18 *
+    usdPrice;
 
   const { ref: lastItemRef, inView } = useInView({
     threshold: 0,
   });
 
-  const { data: walletData = {}, loading, fetchMore } = useQuery(WALLET, {
+  const { data: hodlersData = {}, loading, fetchMore } = useQuery(HODLERS, {
     notifyOnNetworkStatusChange: true,
     variables: {
       publicKey,
       first: 15,
       after: null,
+      // filter: {
+      //   coins: { gt: 9000000 },
+      // },
     },
   });
 
-  const walletResults =
-    walletData?.profile?.holdings?.edges?.map(({ node }: any) => node) || [];
+  const hodlersResults =
+    hodlersData?.profile?.hodlers?.edges?.map(({ node }: any) => node) || [];
+  const { pageInfo } = hodlersData?.profile?.hodlers || {};
 
-  const { pageInfo } = walletData?.profile?.holdings || {};
-
-  const { tableData } = processWalletResults(
-    walletResults,
+  const processedHodlersResults = processHodlersResults(
+    hodlersResults,
     setQueryID,
     lastItemRef
   );
@@ -118,15 +117,19 @@ const Wallet: React.FC<WalletProps> = ({ data, setQueryID }) => {
     <Box mt="24px">
       <Flex>
         <BitcloutProfileLabelValueComp
-          label="TOTAL MARKET VALUE"
-          value={numeral(walletData?.profile?.walletPriceUSD).format("$0,.00")}
+          label="CREATOR COINS"
+          value={numeral(creatorCoins).format("0.00")}
+        />
+        <BitcloutProfileLabelValueComp
+          label="MARKET CAP"
+          value={numeral(marketCap).format("$0,.00")}
         />
       </Flex>
       <Box mt="40px" position="relative" d="flex" justifyContent="center">
         {loading && <Spinner zIndex="2" pos="absolute" top="60px" />}
         <FixedTable
-          columns={columns.wallet}
-          data={tableData}
+          columns={columns.hodlers}
+          data={processedHodlersResults}
           height="calc(100vh - 241px)"
         />
       </Box>
@@ -134,4 +137,4 @@ const Wallet: React.FC<WalletProps> = ({ data, setQueryID }) => {
   );
 };
 
-export default Wallet;
+export default Hodlers;

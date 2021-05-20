@@ -3,9 +3,13 @@ import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries"
 import { relayStylePagination } from "@apollo/client/utilities";
 import { sha256 } from "crypto-hash";
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const next = urlParams.get("next");
+
 const linkChain = createPersistedQueryLink({
   sha256,
-  useGETForHashedQueries: true,
+  useGETForHashedQueries: next !== "true",
 }).concat(new HttpLink({ uri: "https://api.signalclout.com/graphql" }));
 
 const cache = new InMemoryCache({

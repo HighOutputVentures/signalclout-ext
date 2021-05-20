@@ -7,6 +7,8 @@ export const TRANSACTIONS = gql`
     $filter: ProfileTransactionFilterInput!
   ) {
     transactions(first: $first, after: $after, filter: $filter) {
+      totalSoldUSD
+      totalBoughtUSD
       edges {
         node {
           id

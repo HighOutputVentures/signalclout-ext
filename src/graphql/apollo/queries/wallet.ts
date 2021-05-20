@@ -4,6 +4,7 @@ export const WALLET = gql`
   query wallet($publicKey: String!, $first: Int, $after: Binary) {
     profile(publicKey: $publicKey) {
       id
+      walletPriceUSD
       holdings(first: $first, after: $after) {
         edges {
           cursor
