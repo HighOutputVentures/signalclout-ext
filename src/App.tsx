@@ -51,8 +51,8 @@ function App() {
          * in the specified tab for the current extension.
          */
         chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          isEnableSet(response.isVisible);
-          qIdSet(response.queryId);
+          isEnableSet(response?.isVisible);
+          qIdSet(response?.queryId);
         });
       });
   };

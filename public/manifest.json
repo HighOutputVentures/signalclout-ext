@@ -1,6 +1,6 @@
 {
-  "name": "HOV Extensions",
-  "description": "HOV ext for Signal clout profile search",
+  "name": "SignalClout Ext",
+  "description": "HOV ext for signalclout profile view",
   "version": "1.0",
   "manifest_version": 2,
   "browser_action": {
@@ -8,15 +8,11 @@
     "default_title": "Open the popup"
   },
   "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
   },
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": true
-  },
-  "permissions": ["activeTab", "contextMenus", "tabs"],
+  "permissions": ["activeTab"],
   "web_accessible_resources" : ["*.html"],
   "optional_permissions": [
     "<all_urls>"

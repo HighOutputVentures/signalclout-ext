@@ -1,13 +1,4 @@
 import { ChromeMessage, Sender } from "../types";
-import React from 'react'
-import ReactDOM from 'react-dom'
-
-chrome.runtime.onMessage.addListener(request => {
-  if (request.type === 'viewScProfile') {
-    const dialogInstance = document.querySelector("dialog");
-    dialogInstance?.showModal();
-  }
-});
 
 document.addEventListener("DOMContentLoaded", function () {
   var elExist = false
@@ -106,7 +97,7 @@ const messagesFromReactAppListener = (
   ) {
     var elInstance = document.getElementById('trigger-btn');
 
-    var creatorKey = document.getElementsByClassName('creator-profile__ellipsis-restriction')[0].textContent?.trim()
+    var creatorKey = document.getElementsByClassName('creator-profile__ellipsis-restriction')[0]?.textContent?.trim()
 
     if (elInstance && creatorKey) {
       response({isVisible: true, queryId: creatorKey})
