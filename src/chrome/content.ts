@@ -53,18 +53,16 @@ function showSignalCloutBtn() {
   modalDialog.style.padding = '0px'
   modalDialog.style.border = '0px solid'
 
-  modalDialog.innerHTML = `<iframe id="headlineFetcher"style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
+  modalDialog.innerHTML = `<iframe id="iframe-sc" style="height:100%;width: 100%;border: 1px solid transparent;"></iframe>`;
 
   document.body.appendChild(modalDialog);
 
-  const dialogInstance = document.querySelector("dialog");
+  const dialogInstance = document.getElementsByTagName("dialog")[0];
 
-  const iframe = document.getElementById("headlineFetcher");
-
-  iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
-  iframe?.setAttribute('frameBorder', "0")
+  const iframe = document.getElementById("iframe-sc");
 
   newBtn.addEventListener("click", function () {
+    iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
     dialogInstance?.showModal();
   });
 }
@@ -84,8 +82,12 @@ const messagesFromReactAppListener = (
     message.from === Sender.React &&
     message.message === "hide dialog"
   ) {
+    // var dlInstance = document.getElementsByTagName("dialog")[0]
+    // dlInstance?.parentNode?.removeChild(dlInstance);
 
     document.querySelector("dialog")?.close()
+    const iframe = document.getElementById("iframe-sc");
+    iframe?.setAttribute('src', '');
 
     response(true);
   }

@@ -15,9 +15,41 @@ const TEST = gql`
   }
 `;
 
+interface TestAppProps {
+  qId?: string;
+  sendHideDialogMessage: () => void;
+}
+
+const TestApp: React.FC<TestAppProps> = ({ sendHideDialogMessage, qId }) => {
+  const { data, loading } = useQuery(TEST, {
+    fetchPolicy: "network-only",
+    variables: {
+      publicKey: qId,
+    },
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const handleCloseAction = () => {
+    sendHideDialogMessage();
+  };
+
+  return (
+    <BitcloutProfileModal
+      queryId={data?.profile?.id}
+      isOpen={true}
+      onClose={() => handleCloseAction()}
+      setQueryId={(id) => console.log(id)}
+    />
+  );
+};
+
 function App() {
   const [qId, qIdSet] = useState<string>("");
   const [isEnable, isEnableSet] = useState<boolean>(false);
+  const [modalIsOpen, modalIsOpenSet] = useState(true);
 
   /**
    * Send message to the content script
@@ -137,34 +169,6 @@ function App() {
     }
   }
 
-  const TestApp = () => {
-    const [modalIsOpen, modalIsOpenSet] = useState(true);
-    const { data, loading } = useQuery(TEST, {
-      fetchPolicy: "network-only",
-      variables: {
-        publicKey: qId,
-      },
-    });
-
-    if (loading) {
-      return <div>Loading...</div>;
-    }
-
-    const handleCloseAction = () => {
-      // modalIsOpenSet(false);
-      sendHideDialogMessage();
-    };
-
-    return (
-      <BitcloutProfileModal
-        queryId={data?.profile?.id}
-        isOpen={modalIsOpen}
-        onClose={handleCloseAction}
-        setQueryId={(id) => console.log(id)}
-      />
-    );
-  };
-
   const [isPopupWindow, isBrowserWindow] = useMediaQuery([
     "(max-width: 800px)",
     "(min-width: 801px)",
@@ -172,27 +176,28 @@ function App() {
 
   return (
     <div className="App">
-          {isPopupWindow && (
-            <Box w="100%" p={1}>
-              <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <Heading>
-                  Extension is &nbsp;
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={isEnable}
-                      onChange={(e) => handleChange(e)}
-                    />
-                    <span className="slider round"></span>
-                  </label>
-                </Heading>
-              </header>
-            </Box>
-          )}
-          {isBrowserWindow && <TestApp />}
-        </div>
-    
+      {isPopupWindow && (
+        <Box w="100%" p={1}>
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <Heading>
+              Extension is &nbsp;
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={isEnable}
+                  onChange={(e) => handleChange(e)}
+                />
+                <span className="slider round"></span>
+              </label>
+            </Heading>
+          </header>
+        </Box>
+      )}
+      {isBrowserWindow && (
+        <TestApp sendHideDialogMessage={sendHideDialogMessage} qId={qId} />
+      )}
+    </div>
   );
 }
 
