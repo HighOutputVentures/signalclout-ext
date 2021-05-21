@@ -12,11 +12,17 @@
     "48": "logo.png",
     "128": "logo.png"
   },
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage", "tabs"],
   "web_accessible_resources" : ["*.html"],
   "optional_permissions": [
     "<all_urls>"
   ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [
@@ -25,9 +31,7 @@
       ],
       "js": [
         "./static/js/content.js"
-      ],
-      "all_frames": false,
-      "run_at": "document_start"
+      ]
     }
   ]
 }

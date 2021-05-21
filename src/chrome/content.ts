@@ -1,47 +1,47 @@
-import { ChromeMessage, Sender } from "../types";
+import { ChromeMessage, Sender, MessageType } from "../types";
 
-document.addEventListener("DOMContentLoaded", function () {
-  var elExist = false
-  var isRendered = false
-  setInterval(function () {
-    var checkEl = document.querySelector('#syno-nsc-ext-gen3 > app-root > div > app-creator-profile-page > app-page > div > div > div.global__center__width > div > creator-profile-details > div.flex-grow-1 > creator-profile-top-card > div > div.d-flex.flex-column.pl-15px.pr-15px > div.fs-24px.font-weight-bold.d-flex.align-items-center')
-    if (checkEl) {
-      elExist = true
-    } else {
-      elExist = false
-      isRendered = false
-    }
-
-    if (isRendered === false && elExist === true) {
-      showSignalCloutBtn()
-      isRendered = true
-    }
-  }, 100); // check every 100ms
+window.addEventListener('popstate', function(e){
+  console.log('url changed')
+  chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
 });
 
+let url = window.location.href;
+document.body.addEventListener('click', ()=>{
+    requestAnimationFrame(()=>{
+      if(url !== window.location.href) {
+        chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
+      };
+      url = window.location.href;
+    });
+}, true);
+
+setInterval(() => {
+  var checkBtn = document.getElementById('trigger-btn')
+  var checkEl = document.getElementsByClassName('js-creator-profile-top-card-container')[0]
+
+  if(checkEl && checkBtn) {
+    checkBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: visible;'
+    checkEl.appendChild(checkBtn)
+  }
+}, 1000)
+
 function showSignalCloutBtn() {
-  var div = document.getElementsByClassName('creator-profile__avatar')[0];
+  var bodyEl = document.body;
   var newBtn = document.createElement('button');
   newBtn.id = 'trigger-btn'
-  newBtn.style.width = '30px'
-  newBtn.style.height = '30px'
-  newBtn.style.background = 'transparent'
-  newBtn.style.border = 'none'
-  newBtn.style.color = 'white'
-  newBtn.style.textAlign = 'center'
-  newBtn.style.textDecoration = 'none'
-  newBtn.style.display = 'inline-block'
-  newBtn.style.fontSize = '16px'
-  newBtn.style.position = 'absolute'
-  newBtn.style.margin = '10px'
-  newBtn.style.left = '100px'
+  newBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;'
 
   var newBtnImg = document.createElement('img')
   newBtnImg.src = 'https://www.signalclout.com/search-signalclout-brand.svg'
   newBtnImg.style.height = 'inherit'
   newBtnImg.style.height = 'inherit'
   newBtn.appendChild(newBtnImg)
-  div?.parentNode?.insertBefore(newBtn, div.nextSibling);
+  bodyEl.append(newBtn)
+
+  var checkModalIsExist = document.getElementById('signal-clout-view')
+  if(checkModalIsExist) {
+    checkModalIsExist?.parentNode?.removeChild(checkModalIsExist);
+  }
 
   var modalDialog = document.createElement('dialog');
   modalDialog.id = 'signal-clout-view'
@@ -62,10 +62,29 @@ function showSignalCloutBtn() {
   const iframe = document.getElementById("iframe-sc");
 
   newBtn.addEventListener("click", function () {
+    newBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;'
     iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
     dialogInstance?.showModal();
   });
 }
+
+chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
+
+chrome.runtime.onMessage.addListener((message: MessageType) => {
+  switch (message.type) {
+    case "EXT_STATUS_FOR_CONTENT":
+      if (message.showing === true) {
+        var isExist = document.getElementById('trigger-btn')
+
+        if (!isExist) {
+          showSignalCloutBtn()
+        }
+      }
+      break;
+    default:
+      break;
+  }
+});
 
 const messagesFromReactAppListener = (
   message: ChromeMessage,
@@ -82,39 +101,24 @@ const messagesFromReactAppListener = (
     message.from === Sender.React &&
     message.message === "hide dialog"
   ) {
-    // var dlInstance = document.getElementsByTagName("dialog")[0]
-    // dlInstance?.parentNode?.removeChild(dlInstance);
-
+    document?.getElementById('trigger-btn')?.setAttribute('style', 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;')
     document.querySelector("dialog")?.close()
     const iframe = document.getElementById("iframe-sc");
     iframe?.setAttribute('src', '');
-
-    response(true);
   }
 
   if (
     sender.id === chrome.runtime.id &&
     message.from === Sender.React &&
-    message.message === "check button"
+    message.message === "get creator key"
   ) {
-    var elInstance = document.getElementById('trigger-btn');
-
     var creatorKey = document.getElementsByClassName('creator-profile__ellipsis-restriction')[0]?.textContent?.trim()
 
-    if (elInstance && creatorKey) {
-      response({isVisible: true, queryId: creatorKey})
+    if (creatorKey) {
+      response({ queryId: creatorKey })
     } else {
-      response({isVisible: false, queryId: ''})
+      response({ queryId: '' })
     }
-  }
-
-  if (
-    sender.id === chrome.runtime.id &&
-    message.from === Sender.React &&
-    message.message === "show button"
-  ) {
-    showSignalCloutBtn()
-    response(true);
   }
 
   if (
@@ -122,10 +126,10 @@ const messagesFromReactAppListener = (
     message.from === Sender.React &&
     message.message === "hide button"
   ) {
-    var elInstance = document.getElementById('trigger-btn');
-    elInstance?.parentNode?.removeChild(elInstance);
-
-    response(false);
+    var dialogInstance = document.getElementById('signal-clout-view');
+    var btnInstance = document.getElementById('trigger-btn');
+    btnInstance?.parentNode?.removeChild(btnInstance);
+    dialogInstance?.parentNode?.removeChild(dialogInstance);
   }
 };
 
