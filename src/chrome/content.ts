@@ -1,5 +1,7 @@
 import { ChromeMessage, Sender, MessageType } from "../types";
 
+chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: true });
+
 window.addEventListener('popstate', function(e){
   console.log('url changed')
   chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });

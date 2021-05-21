@@ -90,24 +90,6 @@ function App() {
     
   }, []);
 
-  // const sendShowBtnMessage = () => {
-  //   const message: ChromeMessage = {
-  //     from: Sender.React,
-  //     message: "show button",
-  //   };
-
-  //   const queryInfo: chrome.tabs.QueryInfo = {
-  //     active: true,
-  //     currentWindow: true,
-  //   };
-
-  //   chrome.tabs &&
-  //     chrome.tabs.query(queryInfo, (tabs) => {
-  //       const currentTabId = tabs[0].id;
-  //       chrome.tabs.sendMessage(currentTabId || 0, message);
-  //     });
-  // };
-
   const sendHideBtnMessage = () => {
     const message: ChromeMessage = {
       from: Sender.React,
@@ -147,9 +129,7 @@ function App() {
   function handleChange(el: any) {
     chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: el.target.checked });
 
-    if (el.target.checked) {
-      // sendShowBtnMessage();
-    } else {
+    if (!el.target.checked) {
       sendHideBtnMessage();
     }
   }
