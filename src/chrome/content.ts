@@ -1,53 +1,47 @@
 import { ChromeMessage, Sender, MessageType } from "../types";
 
-// setInterval(() => {
-//   var xs = window.matchMedia("(max-width: 575.98px)")
-//   if (xs.matches) {
-//     console.log("xs!")
-//     var btnEl = document.getElementById('trigger-btn')
-//     btnEl?.setAttribute("style", "width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2; top: 7rem; right: 40%;");
-//   }
+window.addEventListener('popstate', function(e){
+  console.log('url changed')
+  chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
+});
 
-//   var sm = window.matchMedia("(min-width:576px) and (max-width: 767.98px)")
-//   if (sm.matches) {
-//     console.log("sm!")
-//     var btnEl = document.getElementById('trigger-btn')
-//     btnEl?.setAttribute("style", "width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2; top: 7rem; right: 60%;");
-//   }
-//   var md = window.matchMedia("(min-width:768px) and (max-width: 991.98px)")
-//   if (md.matches) {
-//     console.log("md!")
-//     var btnEl = document.getElementById('trigger-btn')
-//     btnEl?.setAttribute("style", "width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2; top: 7rem; right: 70%;");
-//   }
+let url = window.location.href;
+document.body.addEventListener('click', ()=>{
+    requestAnimationFrame(()=>{
+      if(url !== window.location.href) {
+        chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
+      };
+      url = window.location.href;
+    });
+}, true);
 
-//   var lg = window.matchMedia("(min-width:992px) and (max-width: 1199.98px)")
-//   if (lg.matches) {
-//     console.log("lg!")
-//     var btnEl = document.getElementById('trigger-btn')
-//     btnEl?.setAttribute("style", "width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2; top: 5.5rem; right: 30%;");
-//   }
-//   var xl = window.matchMedia("(min-width:1200px)")
-//   if (xl.matches) {
-//     console.log("xl!")
-//     var btnEl = document.getElementById('trigger-btn')
-//     btnEl?.setAttribute("style", "width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2; top: 5.5rem; right: 30%;");
-//   }
-// }, 1000)
+setInterval(() => {
+  var checkBtn = document.getElementById('trigger-btn')
+  var checkEl = document.getElementsByClassName('js-creator-profile-top-card-container')[0]
+
+  if(checkEl && checkBtn) {
+    checkBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: visible;'
+    checkEl.appendChild(checkBtn)
+  }
+}, 1000)
 
 function showSignalCloutBtn() {
   var bodyEl = document.body;
   var newBtn = document.createElement('button');
   newBtn.id = 'trigger-btn'
-  newBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 0; text-align: center; z-index: 2;'
+  newBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;'
 
   var newBtnImg = document.createElement('img')
   newBtnImg.src = 'https://www.signalclout.com/search-signalclout-brand.svg'
   newBtnImg.style.height = 'inherit'
   newBtnImg.style.height = 'inherit'
   newBtn.appendChild(newBtnImg)
-  // bodyEl?.parentNode?.insertBefore(newBtn, bodyEl.nextSibling);
-  bodyEl.prepend(newBtn)
+  bodyEl.append(newBtn)
+
+  var checkModalIsExist = document.getElementById('signal-clout-view')
+  if(checkModalIsExist) {
+    checkModalIsExist?.parentNode?.removeChild(checkModalIsExist);
+  }
 
   var modalDialog = document.createElement('dialog');
   modalDialog.id = 'signal-clout-view'
@@ -68,6 +62,7 @@ function showSignalCloutBtn() {
   const iframe = document.getElementById("iframe-sc");
 
   newBtn.addEventListener("click", function () {
+    newBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;'
     iframe?.setAttribute('src', chrome.extension.getURL("index.html"));
     dialogInstance?.showModal();
   });
@@ -106,12 +101,10 @@ const messagesFromReactAppListener = (
     message.from === Sender.React &&
     message.message === "hide dialog"
   ) {
-
+    document?.getElementById('trigger-btn')?.setAttribute('style', 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: hidden;')
     document.querySelector("dialog")?.close()
     const iframe = document.getElementById("iframe-sc");
     iframe?.setAttribute('src', '');
-
-    response(true);
   }
 
   if (
