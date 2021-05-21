@@ -1,31 +1,34 @@
 import { ChromeMessage, Sender, MessageType } from "../types";
 
-chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: true });
-
-window.addEventListener('popstate', function(e){
-  console.log('url changed')
+window.addEventListener("load", function load(event) {
+  // chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: true });
   chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
-});
 
-let url = window.location.href;
-document.body.addEventListener('click', ()=>{
-    requestAnimationFrame(()=>{
-      if(url !== window.location.href) {
+  setInterval(() => {
+    var checkBtn = document.getElementById('trigger-btn')
+    var checkEl = document.getElementsByClassName('js-creator-profile-top-card-container')[0]
+  
+    if (checkEl && checkBtn) {
+      checkBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: visible;'
+      checkEl.appendChild(checkBtn)
+    }
+  }, 1000)
+
+  window.addEventListener('popstate', function (e) {
+    console.log('url changed')
+    chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
+  });
+  
+  let url = window.location.href;
+  document.body.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+      if (url !== window.location.href) {
         chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
       };
       url = window.location.href;
     });
-}, true);
-
-setInterval(() => {
-  var checkBtn = document.getElementById('trigger-btn')
-  var checkEl = document.getElementsByClassName('js-creator-profile-top-card-container')[0]
-
-  if(checkEl && checkBtn) {
-    checkBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: visible;'
-    checkEl.appendChild(checkBtn)
-  }
-}, 1000)
+  }, true);
+}, false);
 
 function showSignalCloutBtn() {
   var bodyEl = document.body;
@@ -41,7 +44,7 @@ function showSignalCloutBtn() {
   bodyEl.append(newBtn)
 
   var checkModalIsExist = document.getElementById('signal-clout-view')
-  if(checkModalIsExist) {
+  if (checkModalIsExist) {
     checkModalIsExist?.parentNode?.removeChild(checkModalIsExist);
   }
 
@@ -69,8 +72,6 @@ function showSignalCloutBtn() {
     dialogInstance?.showModal();
   });
 }
-
-chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
 
 chrome.runtime.onMessage.addListener((message: MessageType) => {
   switch (message.type) {
