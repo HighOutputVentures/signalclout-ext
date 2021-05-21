@@ -7,7 +7,7 @@ window.addEventListener("load", function load(event) {
   setInterval(() => {
     var checkBtn = document.getElementById('trigger-btn')
     var checkEl = document.getElementsByClassName('js-creator-profile-top-card-container')[0]
-  
+
     if (checkEl && checkBtn) {
       checkBtn.style.cssText = 'width: 30px; height: 30px; background: transparent; border: none; color: white; text-decoration: none; display: inline-block; font-size: 16px; position: absolute;  margin-left: auto; margin-right: auto; left: 0; right: 60%; text-align: center; visibility: visible;'
       checkEl.appendChild(checkBtn)
@@ -18,7 +18,7 @@ window.addEventListener("load", function load(event) {
     console.log('url changed')
     chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS_FROM_CONTENT" });
   });
-  
+
   let url = window.location.href;
   document.body.addEventListener('click', () => {
     requestAnimationFrame(() => {

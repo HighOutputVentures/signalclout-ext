@@ -1,11 +1,7 @@
-var isFirst = true
+var isFirst = true;
 
 const sendExtStatus = (showing) => {
   chrome.runtime.sendMessage({ type: "EXT_STATUS", showing });
-  console.log(
-    "🚀 ~ file: background.js ~ line 5 ~ sendExtStatus ~ sendExtStatus",
-    showing
-  );
 };
 
 const sendExtStatusToContent = (showing) => {
@@ -15,7 +11,7 @@ const sendExtStatusToContent = (showing) => {
       showing,
     });
   });
-  isFirst = false
+  isFirst = false;
 };
 
 let showing = false;
@@ -30,8 +26,8 @@ chrome.storage.local.get("showing", (res) => {
 });
 
 chrome.runtime.onMessage.addListener((message) => {
-  if(isFirst) {
-    showing = true
+  if (isFirst) {
+    showing = true;
   }
   switch (message.type) {
     case "REQ_EXT_STATUS_FROM_CONTENT":
