@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { ChromeMessage, Sender } from "./types";
+import { ChromeMessage, Sender, MessageType } from "./types";
 import { useMediaQuery, Box, Heading } from "@chakra-ui/react";
 import BitcloutProfileModal from "./BitcloutProfileModal";
 import { useQuery } from "@apollo/client";
@@ -48,16 +48,15 @@ const TestApp: React.FC<TestAppProps> = ({ sendHideDialogMessage, qId }) => {
 
 function App() {
   const [qId, qIdSet] = useState<string>("");
-  const [isEnable, isEnableSet] = useState<boolean>(false);
-  const [modalIsOpen, modalIsOpenSet] = useState(true);
+  const [showing, setShowing] = useState<boolean>(false);
 
   /**
    * Send message to the content script
    */
-  const checkIsEnableMessage = () => {
+  const getCreatorKeyMessage = () => {
     const message: ChromeMessage = {
       from: Sender.React,
-      message: "check button",
+      message: "get creator key",
     };
 
     const queryInfo: chrome.tabs.QueryInfo = {
@@ -65,63 +64,51 @@ function App() {
       currentWindow: true,
     };
 
-    /**
-     * We can't use "chrome.runtime.sendMessage" for sending messages from React.
-     * For sending messages from React we need to specify which tab to send it to.
-     */
     chrome.tabs &&
       chrome.tabs.query(queryInfo, (tabs) => {
         const currentTabId = tabs[0].id;
-        /**
-         * Sends a single message to the content script(s) in the specified tab,
-         * with an optional callback to run when a response is sent back.
-         *
-         * The runtime.onMessage event is fired in each content script running
-         * in the specified tab for the current extension.
-         */
         chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          isEnableSet(response?.isVisible);
           qIdSet(response?.queryId);
         });
       });
   };
 
-  /**
-   * Get current URL
-   */
   useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
+    getCreatorKeyMessage();
 
-    chrome.tabs &&
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const url = tabs[0].url;
-        // setUrl(url || "");
-      });
+    chrome.runtime.sendMessage({ type: "REQ_EXT_STATUS" });
 
-    checkIsEnableMessage();
+    chrome.runtime.onMessage.addListener((message: MessageType) => {
+      switch (message.type) {
+        case "EXT_STATUS":
+          setShowing(message.showing);
+          break;
+        default:
+          break;
+      }
+    });
+    
   }, []);
 
-  const sendShowMessage = () => {
-    const message: ChromeMessage = {
-      from: Sender.React,
-      message: "show button",
-    };
+  // const sendShowBtnMessage = () => {
+  //   const message: ChromeMessage = {
+  //     from: Sender.React,
+  //     message: "show button",
+  //   };
 
-    const queryInfo: chrome.tabs.QueryInfo = {
-      active: true,
-      currentWindow: true,
-    };
+  //   const queryInfo: chrome.tabs.QueryInfo = {
+  //     active: true,
+  //     currentWindow: true,
+  //   };
 
-    chrome.tabs &&
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const currentTabId = tabs[0].id;
-        chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          isEnableSet(response);
-        });
-      });
-  };
+  //   chrome.tabs &&
+  //     chrome.tabs.query(queryInfo, (tabs) => {
+  //       const currentTabId = tabs[0].id;
+  //       chrome.tabs.sendMessage(currentTabId || 0, message);
+  //     });
+  // };
 
-  const sendHideMessage = () => {
+  const sendHideBtnMessage = () => {
     const message: ChromeMessage = {
       from: Sender.React,
       message: "hide button",
@@ -135,9 +122,7 @@ function App() {
     chrome.tabs &&
       chrome.tabs.query(queryInfo, (tabs) => {
         const currentTabId = tabs[0].id;
-        chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          isEnableSet(response);
-        });
+        chrome.tabs.sendMessage(currentTabId || 0, message);
       });
   };
 
@@ -155,17 +140,17 @@ function App() {
     chrome.tabs &&
       chrome.tabs.query(queryInfo, (tabs) => {
         const currentTabId = tabs[0].id;
-        chrome.tabs.sendMessage(currentTabId || 0, message, (response) => {
-          // isEnableSet(response);
-        });
+        chrome.tabs.sendMessage(currentTabId || 0, message);
       });
   };
 
   function handleChange(el: any) {
+    chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: el.target.checked });
+
     if (el.target.checked) {
-      sendShowMessage();
+      // sendShowBtnMessage();
     } else {
-      sendHideMessage();
+      sendHideBtnMessage();
     }
   }
 
@@ -185,7 +170,7 @@ function App() {
               <label className="switch">
                 <input
                   type="checkbox"
-                  checked={isEnable}
+                  checked={showing}
                   onChange={(e) => handleChange(e)}
                 />
                 <span className="slider round"></span>
