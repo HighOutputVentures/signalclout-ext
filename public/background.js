@@ -27,6 +27,7 @@ chrome.storage.local.get("showing", (res) => {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (isFirst) {
+    console.log("Am I getting fired?")
     showing = true;
   }
   switch (message.type) {
