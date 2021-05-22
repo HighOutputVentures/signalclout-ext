@@ -1,4 +1,8 @@
-var isFirst = true;
+var isFirst = null;
+
+chrome.runtime.onInstalled.addListener(function() {
+  isFirst = true
+});
 
 const sendExtStatus = (showing) => {
   chrome.runtime.sendMessage({ type: "EXT_STATUS", showing });
@@ -27,9 +31,10 @@ chrome.storage.local.get("showing", (res) => {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (isFirst) {
-    console.log("Am I getting fired?")
     showing = true;
+    isFirst = false
   }
+  
   switch (message.type) {
     case "REQ_EXT_STATUS_FROM_CONTENT":
       sendExtStatusToContent(showing);

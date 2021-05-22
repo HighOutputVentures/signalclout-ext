@@ -15,12 +15,11 @@
 
 .App-header {
   background-color: #d3d3d3;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: black;
+  padding: 2rem;
 }
 
 @keyframes App-logo-spin {

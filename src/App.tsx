@@ -87,7 +87,6 @@ function App() {
           break;
       }
     });
-    
   }, []);
 
   const sendHideBtnMessage = () => {
@@ -127,7 +126,10 @@ function App() {
   };
 
   function handleChange(el: any) {
-    chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: el.target.checked });
+    chrome.runtime.sendMessage({
+      type: "TOGGLE_EXT",
+      showing: el.target.checked,
+    });
 
     if (!el.target.checked) {
       sendHideBtnMessage();
@@ -142,11 +144,11 @@ function App() {
   return (
     <div className="App">
       {isPopupWindow && (
-        <Box w="100%" p={1}>
+        <Box w="100%">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <Heading>
-              Extension is &nbsp;
+            <Heading as="h5" size="sm">
+              Service is
               <label className="switch">
                 <input
                   type="checkbox"
