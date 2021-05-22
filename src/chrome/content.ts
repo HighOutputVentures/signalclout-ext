@@ -51,7 +51,6 @@ function showSignalCloutBtn() {
   var modalDialog = document.createElement('dialog');
   modalDialog.id = 'signal-clout-view'
   modalDialog.style.margin = '0px'
-  modalDialog.style.display = 'flex'
   modalDialog.style.minWidth = '100%'
   modalDialog.style.minHeight = '100%'
   modalDialog.style.height = '100%'
