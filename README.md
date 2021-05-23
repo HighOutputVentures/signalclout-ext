@@ -30,7 +30,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Usage <a name = "usage"></a>
 
-- Once done, open a tab and go to [Bitclout](https://bitclout.com) and select a profile. You will be able to see the Signalclout icon beside the creator's profile picture.<br />
+- Once done, open a tab and go to [Bitclout](https://bitclout.com) then select a profile. You will be able to see the Signalclout icon beside the creator's profile avatar.<br />
 ![Image of 2.gif](./public/images/gifs/2.gif)
 
 - Click the button to view the creator's profile and details.<br />
