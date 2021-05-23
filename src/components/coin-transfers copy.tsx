@@ -4,8 +4,8 @@ import numeral from "numeral";
 import { DateTime as dt } from "luxon";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
-import { COIN_TRANSFERS } from "./graphql/apollo/queries/coint-transfers";
-import { columns } from "./constants/profile-analyzer";
+import { COIN_TRANSFERS } from "../graphql/apollo/queries/coint-transfers";
+import { columns } from "../constants/profile-analyzer";
 import FixedTable from "./fixed-header-table";
 
 type CoinTransfersProps = {

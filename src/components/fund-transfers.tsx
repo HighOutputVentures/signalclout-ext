@@ -6,11 +6,11 @@ import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
 import { DateTime as dt } from "luxon";
 import { HiExternalLink } from "react-icons/hi";
-import { TRANSFERS } from "./graphql/apollo/queries/fund-transfers";
-import { columns } from "./constants/profile-analyzer";
+import { TRANSFERS } from "../graphql/apollo/queries/fund-transfers";
+import { columns } from "../constants/profile-analyzer";
 import FixedTable from "./fixed-header-table";
 import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
-import useUSDPrice from "./hooks/useUSDPrice";
+import useUSDPrice from "../hooks/useUSDPrice";
 
 type FundTransfersProps = {
   data?: any;

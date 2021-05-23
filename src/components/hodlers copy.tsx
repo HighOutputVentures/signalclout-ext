@@ -3,11 +3,11 @@ import { Box, Flex, Spinner, Link, Text, Avatar } from "@chakra-ui/react";
 import numeral from "numeral";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
-import { HODLERS } from "./graphql/apollo/queries/hodlers";
-import { columns } from "./constants/profile-analyzer";
+import { HODLERS } from "../graphql/apollo/queries/hodlers";
+import { columns } from "../constants/profile-analyzer";
 import FixedTable from "./fixed-header-table";
 import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
-import useUSDPrice from "./hooks/useUSDPrice";
+import useUSDPrice from "../hooks/useUSDPrice";
 
 type HodlersProps = {
   data?: any;

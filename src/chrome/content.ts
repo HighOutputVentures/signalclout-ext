@@ -1,4 +1,4 @@
-import { ChromeMessage, Sender, MessageType } from "../types";
+import { ChromeMessage, Sender, MessageType } from "../components/types";
 
 window.addEventListener("load", function load(event) {
   // chrome.runtime.sendMessage({ type: "TOGGLE_EXT", showing: true });

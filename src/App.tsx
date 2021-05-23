@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { ChromeMessage, Sender, MessageType } from "./types";
+import { ChromeMessage, Sender, MessageType } from "./components/types";
 import { useMediaQuery, Box, Heading } from "@chakra-ui/react";
-import BitcloutProfileModal from "./BitcloutProfileModal";
+import BitcloutProfileModal from "./components/BitcloutProfileModal";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 
-const TEST = gql`
+const PROFILE = gql`
   query signalcloutProfile($publicKey: String!) {
     profile(publicKey: $publicKey) {
       id
@@ -15,13 +15,13 @@ const TEST = gql`
   }
 `;
 
-interface TestAppProps {
+interface ModalWrapProps {
   qId?: string;
   sendHideDialogMessage: () => void;
 }
 
-const TestApp: React.FC<TestAppProps> = ({ sendHideDialogMessage, qId }) => {
-  const { data, loading } = useQuery(TEST, {
+const ModalWrap: React.FC<ModalWrapProps> = ({ sendHideDialogMessage, qId }) => {
+  const { data, loading } = useQuery(PROFILE, {
     fetchPolicy: "network-only",
     variables: {
       publicKey: qId,
@@ -162,7 +162,7 @@ function App() {
         </Box>
       )}
       {isBrowserWindow && (
-        <TestApp sendHideDialogMessage={sendHideDialogMessage} qId={qId} />
+        <ModalWrap sendHideDialogMessage={sendHideDialogMessage} qId={qId} />
       )}
     </div>
   );

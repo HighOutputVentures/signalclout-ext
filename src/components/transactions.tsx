@@ -13,10 +13,10 @@ import numeral from "numeral";
 import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
 import { DateTime as dt } from "luxon";
-import { columns } from "./constants/profile-analyzer";
-import { TRANSACTIONS } from "./graphql/apollo/queries/transactions";
+import { columns } from "../constants/profile-analyzer";
+import { TRANSACTIONS } from "../graphql/apollo/queries/transactions";
 import FixedTable from "./fixed-header-table";
-import useUSDPrice from "./hooks/useUSDPrice";
+import useUSDPrice from "../hooks/useUSDPrice";
 import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
 
 type TransactionsProps = {

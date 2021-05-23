@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# Signalclout Chrome Extension
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
 
-## Available Scripts
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Usage](#usage)
+- [Demo](#demo)
 
-In the project directory, you can run:
+## About <a name = "about"></a>
 
-### `yarn start`
+[Signalclout](https://www.signalclout.com) has this very useful feature in their website - [Profile Analyzer](https://www.signalclout.com/profile-analyzer), in which you can view the [Bitclout](https://bitclout.com/) creator's profile and details by supplying the username. This tool was developed to address the pain among many users on the repetitive action of copying and pasting the username of a creator from the Bitclout website to the Signalclout profile search bar.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting Started <a name = "getting_started"></a>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### `yarn test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- You’ll need to have **Node >= 10** on your local development machine
+- To install packages and dependencies, run **npm install** or **yarn install**
 
-### `yarn build`
+### Installing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Build the app for production by running this built-in command - **npm run build** or **yarn build**, this will generate a folder named `build`.<br />
+![Image of 0.gif](./public/images/gifs/0.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- The build folder can now be used to install in your browser - Google Chrome, by loading it on `chrome://extensions/`.<br />
+![Image of 1.gif](./public/images/gifs/1.gif)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage <a name = "usage"></a>
 
-### `yarn eject`
+- Once done, open a tab and go to [Bitclout](https://bitclout.com) and select a profile. You will be able to see the Signalclout icon beside the creator's profile picture.<br />
+![Image of 2.gif](./public/images/gifs/2.gif)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Click the button to view the creator's profile and details.<br />
+![Image of 3.gif](./public/images/gifs/3.gif)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- You can enable or disable the service by pressing the switch on the popup window.<br />
+![Image of 4.gif](./public/images/gifs/4.gif)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Full Demo <a name = "demo"></a>
+![Image of 5.gif](./public/images/gifs/5.gif)
