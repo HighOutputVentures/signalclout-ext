@@ -4,9 +4,9 @@ import { Box, Flex, Spinner, Link, Avatar, Text } from "@chakra-ui/react";
 import numeral from "numeral";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
-import { WALLET } from "../graphql/apollo/queries/wallet";
-import { columns } from "../constants/profile-analyzer";
-import FixedTable from "./fixed-header-table";
+import { WALLET } from "../../graphql/apollo/queries/wallet";
+import { columns } from "../../constants/profile-analyzer";
+import FixedTable from "../fixed-header-table";
 import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
 
 type WalletProps = {

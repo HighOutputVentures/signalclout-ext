@@ -17,7 +17,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         profiles: relayStylePagination(),
-        transactions: relayStylePagination(),
+        transactions: relayStylePagination(["filter"]),
       },
     },
     Profile: {
@@ -27,6 +27,7 @@ const cache = new InMemoryCache({
         creatorsIHodle: relayStylePagination(),
         holdings: relayStylePagination(),
         coinTransferTransactions: relayStylePagination(),
+        history: relayStylePagination(),
       },
     },
   },

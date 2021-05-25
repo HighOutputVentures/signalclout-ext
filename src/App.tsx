@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { ChromeMessage, Sender, MessageType } from "./components/types";
 import { useMediaQuery, Box, Heading } from "@chakra-ui/react";
-import BitcloutProfileModal from "./components/BitcloutProfileModal";
+import BitcloutProfileModal from "./components/profile-analyzer/bitclout-profile-modal";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 

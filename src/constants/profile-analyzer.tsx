@@ -81,6 +81,36 @@ export const columns = {
       accessor: "change",
     },
   ],
+  tradingFeed: [
+    {
+      Header: "ACTION",
+      accessor: "action",
+    },
+    {
+      Header: "DATE",
+      accessor: "date",
+    },
+    {
+      Header: "CREATOR",
+      accessor: "creator",
+    },
+    {
+      Header: "AMOUNT",
+      accessor: "amount",
+    },
+    {
+      Header: "COINS",
+      accessor: "coins",
+    },
+    {
+      Header: "PRICE",
+      accessor: "price",
+    },
+    // {
+    //   Header: "CHANGE",
+    //   accessor: "change",
+    // },
+  ],
   hodlers: [
     {
       Header: "NAME",

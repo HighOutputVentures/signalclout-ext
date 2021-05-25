@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-export const TRANSACTIONS = gql`
-  query transactions(
+export const TRADING_FEED = gql`
+  query tradingFeed(
     $first: Int
     $after: Binary
     $filter: ProfileTransactionFilterInput!
@@ -13,7 +13,7 @@ export const TRANSACTIONS = gql`
       edges {
         node {
           id
-          transactor {
+          creator {
             id
             username
           }

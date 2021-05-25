@@ -5,19 +5,19 @@ import {
   Tooltip,
   Link,
   Spinner,
-  Icon,
-  Flex,
+  // Icon,
+  // Flex,
 } from "@chakra-ui/react";
-import { FaInfinity } from "react-icons/fa";
+// import { FaInfinity } from "react-icons/fa";
 import numeral from "numeral";
 import { useQuery } from "@apollo/client";
 import { useInView } from "react-intersection-observer";
 import { DateTime as dt } from "luxon";
-import { columns } from "../constants/profile-analyzer";
-import { TRANSACTIONS } from "../graphql/apollo/queries/transactions";
-import FixedTable from "./fixed-header-table";
-import useUSDPrice from "../hooks/useUSDPrice";
-import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
+import { columns } from "../../constants/profile-analyzer";
+import { TRADING_FEED } from "../../graphql/apollo/queries/trading-feed";
+import FixedTable from "../fixed-header-table";
+import useUSDPrice from "../../hooks/useUSDPrice";
+// import BitcloutProfileLabelValueComp from "./bitclout-profile-label-value-comp";
 
 type TransactionsProps = {
   data?: any;
@@ -39,12 +39,12 @@ const labelFromAction = {
   [actions.transfer_to]: <Box color="blue.500">Sent</Box>,
 };
 
-const changeColor = {
-  [actions.buy]: "green.500",
-  [actions.sell]: "red.500",
-  [actions.transfer_from]: "blue.500",
-  [actions.transfer_to]: "blue.500",
-};
+// const changeColor = {
+//   [actions.buy]: "green.500",
+//   [actions.sell]: "red.500",
+//   [actions.transfer_from]: "blue.500",
+//   [actions.transfer_to]: "blue.500",
+// };
 
 const processTransactionsResults = (
   results: Partial<Record<string, any>[]>,
@@ -53,7 +53,7 @@ const processTransactionsResults = (
   setNewQueryID: any
 ) => {
   return results.map((res, index) => {
-    const label = res?.node?.transactor?.username;
+    const label = res?.node?.creator?.username;
     const coins = res?.node?.coins / 1e9;
     const amount = (res?.node?.bitCloutNanos / 1e9) * usdPrice;
 
@@ -62,13 +62,12 @@ const processTransactionsResults = (
     const computedPrice = 0.003 * circulation * circulation;
     const price = computedPrice * usdPrice;
 
-    const prePrice = 0.003 * res?.node?.fromCoinsInCirculation ** 2;
-    const postPrice = 0.003 * res?.node?.toCoinsInCirculation ** 2;
+    // const prePrice = 0.003 * res?.node?.fromCoinsInCirculation ** 2;
+    // const postPrice = 0.003 * res?.node?.toCoinsInCirculation ** 2;
 
-    const change = ((postPrice - prePrice) / prePrice) * 100;
+    // const change = ((postPrice - prePrice) / prePrice) * 100;
 
     return {
-      action: <Box fontWeight="700">{labelFromAction[res?.node?.type]}</Box>,
       date: (
         <Box ref={index === results.length - 1 ? lastItemRef : null}>
           <Text color="gray.500">
@@ -78,14 +77,15 @@ const processTransactionsResults = (
           </Text>
         </Box>
       ),
-      transactor: (
+      action: <Box fontWeight="700">{labelFromAction[res?.node?.type]}</Box>,
+      creator: (
         <Tooltip label={label} placement="top-start">
           <Link
             color="brand.500"
             display="flex"
             alignItems="center"
             onClick={() => {
-              const id = res?.node?.transactor?.id;
+              const id = res?.node?.creator?.id;
               setNewQueryID(id);
             }}
             target="_blank"
@@ -113,19 +113,6 @@ const processTransactionsResults = (
           {numeral(price).format("$0,.00")}
         </Text>
       ),
-      change: (
-        <Text
-          color={changeColor[res?.node?.type]}
-          fontSize="14px"
-          fontWeight="700"
-        >
-          {change === Infinity ? (
-            <Icon fontSize="18px" as={FaInfinity} />
-          ) : (
-            `${numeral(change).format("0,.00")}%`
-          )}
-        </Text>
-      ),
     };
   });
 };
@@ -139,15 +126,15 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
   });
 
   const { data: transactionsData = {}, loading, fetchMore } = useQuery(
-    TRANSACTIONS,
+    TRADING_FEED,
     {
       notifyOnNetworkStatusChange: true,
-      fetchPolicy: "network-only",
+      // fetchPolicy: "network-only",
       variables: {
         first: 15,
         after: null,
         filter: {
-          creator: {
+          transactor: {
             eq: publicKey,
           },
         },
@@ -156,8 +143,10 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
   );
 
   const transactionResults = transactionsData?.transactions?.edges || [];
-  const { pageInfo, totalBoughtUSD, totalSoldUSD } =
-    transactionsData?.transactions || {};
+  const {
+    pageInfo,
+    //  totalBoughtUSD, totalSoldUSD
+  } = transactionsData?.transactions || {};
 
   const processedTransactionsResults = processTransactionsResults(
     transactionResults,
@@ -177,9 +166,15 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
+  // useEffect(() => {
+  //   if (publicKey) {
+  //     refetch();
+  //   }
+  // }, [publicKey, refetch]);
+
   return (
     <Box mt="24px">
-      <Flex>
+      {/* <Flex>
         <BitcloutProfileLabelValueComp
           label="TOTAL BUY VOLUME"
           value={numeral(totalBoughtUSD).format("$0,.00")}
@@ -192,13 +187,14 @@ const Transactions: React.FC<TransactionsProps> = ({ data, setQueryID }) => {
           label="TOTAL VOLUME"
           value={numeral(totalBoughtUSD + totalSoldUSD).format("$0,0")}
         />
-      </Flex>
+      </Flex> */}
       <Box mt="40px" position="relative" d="flex" justifyContent="center">
         {loading && <Spinner zIndex="2" pos="absolute" top="60px" />}
         <FixedTable
-          columns={columns.transactions}
+          columns={columns.tradingFeed}
           data={processedTransactionsResults}
-          height="calc(100vh - 241px)"
+          // height="calc(100vh - 241px)"
+          height="calc(100vh - 175px)"
         />
       </Box>
     </Box>

@@ -4,9 +4,9 @@ import numeral from "numeral";
 import { DateTime as dt } from "luxon";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@apollo/client";
-import { COIN_TRANSFERS } from "../graphql/apollo/queries/coint-transfers";
-import { columns } from "../constants/profile-analyzer";
-import FixedTable from "./fixed-header-table";
+import { COIN_TRANSFERS } from "../../graphql/apollo/queries/coin-transfers";
+import { columns } from "../../constants/profile-analyzer";
+import FixedTable from "../fixed-header-table";
 
 type CoinTransfersProps = {
   data?: any;
@@ -128,7 +128,8 @@ const CoinTransfers: React.FC<CoinTransfersProps> = ({ data, setQueryID }) => {
         <FixedTable
           columns={columns.coinTransfers}
           data={processedCoinTransfersResults}
-          height="calc(100vh - 241px)"
+          // height="calc(100vh - 241px)"
+          height="calc(100vh - 175px)"
         />
       </Box>
     </Box>

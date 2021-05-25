@@ -9,7 +9,7 @@ import {
   Avatar,
   Link,
   Grid,
-  Text,
+  // Text,
   Tab,
   TabList,
   TabPanel,
@@ -20,19 +20,23 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment";
 import { useQuery } from "@apollo/client";
-import { HiExternalLink, HiOutlineClock } from "react-icons/hi";
+import {
+  HiExternalLink,
+  //  HiOutlineClock
+} from "react-icons/hi";
 import numeral from "numeral";
-import CopyPubKeyNext from "../copy-pubkey/next";
+import CopyPubKeyNext from "../../copy-pubkey/next";
 import BitcloutProfileCard from "./bitclout-profile-card";
-import { PROFILE } from "../graphql/apollo/queries/profiles";
-import useUSDPrice from "../hooks/useUSDPrice";
-import { getProfileUrl } from "../utils/getProfileUrl";
+import { PROFILE } from "../../graphql/apollo/queries/profiles";
+import useUSDPrice from "../../hooks/useUSDPrice";
+import { getProfileUrl } from "../../utils/getProfileUrl";
 import FundTransfers from "./fund-transfers";
 import Transactions from "./transactions";
 import Hodlers from "./hodlers";
 import Portfolio from "./portfolio";
 import CoinTransfers from "./coin-transfers";
-// import useIsNext from "./hooks/useIsNext";
+import TradingFeed from "./trading-feed";
+import History from "./history";
 
 interface BitcloutProfileModalProps {
   queryId?: string;
@@ -47,7 +51,6 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
   onClose,
   setQueryId,
 }) => {
-  // const isNext = useIsNext();
   const usdPrice = useUSDPrice();
 
   const [triggerCopyState, setTriggerCopyState] = useState(false);
@@ -193,7 +196,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   />
                   <BitcloutProfileCard
                     label="Market Cap"
-                    value={numeral(marketCap).format("$0,0.00a").toUpperCase()}
+                    value={numeral(marketCap).format("$0,0.00").toUpperCase()}
                   />
                   <BitcloutProfileCard
                     label="Followers"
@@ -217,7 +220,13 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   />
                 </Grid>
               </Flex>
-              <Tabs px="0" width="100%" colorScheme="brand" isLazy>
+              <Tabs
+                px="0"
+                width="100%"
+                colorScheme="brand"
+                isLazy
+                lazyBehavior="keepMounted"
+              >
                 <TabList pt="20px">
                   <Tab
                     mx="30px"
@@ -250,6 +259,17 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                     _focus={{ outline: "none" }}
                     cursor="pointer !important"
                   >
+                    Trading Feed
+                  </Tab>
+                  <Tab
+                    fontSize="13px"
+                    mx="30px"
+                    pb="16px"
+                    fontWeight="700"
+                    color="gray.500"
+                    _focus={{ outline: "none" }}
+                    cursor="pointer !important"
+                  >
                     Coin Transfers
                   </Tab>
                   <Tab
@@ -272,12 +292,23 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                     _focus={{ outline: "none" }}
                     _disabled={{ color: "gray.300" }}
                     cursor="pointer !important"
-                    // isDisabled={!isNext}
                   >
                     Wallet
                   </Tab>
-
                   <Tab
+                    fontSize="13px"
+                    mx="30px"
+                    pb="16px"
+                    fontWeight="700"
+                    color="gray.500"
+                    _focus={{ outline: "none" }}
+                    _disabled={{ color: "gray.300" }}
+                    cursor="pointer !important"
+                  >
+                    History
+                  </Tab>
+
+                  {/* <Tab
                     mx="30px"
                     fontSize="13px"
                     pb="16px"
@@ -293,8 +324,8 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                         <HiOutlineClock />
                       </Box>
                     </Flex>
-                  </Tab>
-                  <Tab
+                  </Tab> */}
+                  {/* <Tab
                     fontSize="13px"
                     mx="30px"
                     pb="16px"
@@ -308,7 +339,7 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                       <Text mr="4px">Linked Accounts</Text>
                       <HiOutlineClock />
                     </Flex>
-                  </Tab>
+                  </Tab> */}
                 </TabList>
                 <TabPanels>
                   <TabPanel py="0">
@@ -322,6 +353,9 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                     <Transactions data={data} setQueryID={setQueryId} />
                   </TabPanel>
                   <TabPanel py="0">
+                    <TradingFeed data={data} setQueryID={setQueryId} />
+                  </TabPanel>
+                  <TabPanel py="0">
                     <CoinTransfers data={data} setQueryID={setQueryId} />
                   </TabPanel>
                   <TabPanel py="0">
@@ -329,6 +363,9 @@ const BitcloutProfileModal: React.FC<BitcloutProfileModalProps> = ({
                   </TabPanel>
                   <TabPanel py="0">
                     <Portfolio data={data} setQueryID={setQueryId} />
+                  </TabPanel>
+                  <TabPanel py="0">
+                    <History data={data} setQueryID={setQueryId} />
                   </TabPanel>
                 </TabPanels>
               </Tabs>
